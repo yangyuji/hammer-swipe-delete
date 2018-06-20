@@ -9,7 +9,7 @@
 (function (root, factory) {
     if (typeof module != 'undefined' && module.exports) {
         module.exports = factory();
-    } else if ( typeof define == 'function' && define.amd ) {
+    } else if (typeof define == 'function' && define.amd) {
         define( function () { return factory(); } );
     } else {
         root['hammerSwipeDelete'] = factory();
@@ -18,11 +18,11 @@
     'use strict'
 
     var _translate = function (el, attr, val) {
-        var vendors = ['', 'Webkit', 'ms', 'Moz', 'O'],
+        var vendors = ['', 'webkit', 'ms', 'Moz', 'O'],
             body = document.body || document.documentElement;
 
         [].forEach.call(vendors, function (vendor) {
-            var styleAttr = vendor ? vendor + attr : attr.charAt(0).toLowerCase() + attr.substr(1);
+            var styleAttr = vendor ? vendor + attr.charAt(0).toUpperCase() + attr.substr(1) : attr;
             if (typeof body.style[styleAttr] === 'string') {
                 el.style[styleAttr] = val;
             }
