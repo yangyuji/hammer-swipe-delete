@@ -1,9 +1,9 @@
-/*
+/**
 * author: "oujizeng",
 * license: "MIT",
 * github: "https://github.com/yangyuji/hammer-swipe-delete",
 * name: "hammerSwipeDelete.js",
-* version: "1.0.0"
+* version: "1.0.1"
 */
 
 (function (root, factory) {
@@ -46,12 +46,10 @@
                     var btn = document.createElement('div');
                     btn.textContent = opt.buttons[n].text;
                     btn.classList.add(opt.buttons[n].class);
-                    btn.addEventListener('click', opt.buttons[n].click || null, false);
+                    typeof opt.buttons[n].click === 'function' &&
+                    btn.addEventListener('click', opt.buttons[n].click, false);
                     container[i].appendChild(btn);
                 }
-
-                // 开启硬件加速
-                _translate(container[i], 'transform', 'translateZ(0)');
 
                 var hammer = new Hammer(container[i]);
                 hammer.get('pan').set({ direction: Hammer.DIRECTION_HORIZONTAL });
@@ -64,7 +62,6 @@
                     if (target.classList.contains(classTag)) {
                         el = target;
                     }
-                    // 查找元素
                     while(target && el == null) {
                         if (target.classList.contains(classTag)) {
                             el = target;
@@ -80,7 +77,7 @@
                     if (ev.type == 'swiperight') {
                         if (el.classList.contains('move-out-click')) {
                             _translate(el, 'transitionDuration', '200ms');
-                            _translate(el, 'transform', 'translateX(0px)');
+                            _translate(el, 'transform', 'translate3d(0, 0, 0)');
                             el.classList.remove('move-out-click');
                         }
                     }
@@ -90,7 +87,7 @@
                         console.log('swipeleft', el);
                         if (!el.classList.contains('move-out-click')) {
                             _translate(el, 'transitionDuration', '200ms');
-                            _translate(el, 'transform', 'translateX(' + -moveCount + 'px)');
+                            _translate(el, 'transform', 'translate3d(' + -moveCount + 'px, 0, 0)');
                             el.classList.add('move-out-click');
                         }
                     }
@@ -101,7 +98,7 @@
                             if (container[ii].classList.contains('move-out-click') && container[ii] != el) {
                                 // 动画慢一点，避免卡帧
                                 _translate(container[ii], 'transitionDuration', '200ms');
-                                _translate(container[ii], 'transform', 'translateX(0px)');
+                                _translate(container[ii], 'transform', 'translate3d(0, 0, 0)');
                                 container[ii].classList.remove('move-out-click');
                             }
                         }
