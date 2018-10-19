@@ -19,7 +19,7 @@
 
     var _translate = function (el, attr, val) {
         var vendors = ['', 'webkit', 'ms', 'Moz', 'O'],
-            body = document.body || document.documentElement;
+            body = document.documentElement;
 
         [].forEach.call(vendors, function (vendor) {
             var styleAttr = vendor ? vendor + attr.charAt(0).toUpperCase() + attr.substr(1) : attr;
