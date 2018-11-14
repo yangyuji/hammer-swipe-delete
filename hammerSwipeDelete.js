@@ -3,7 +3,7 @@
 * license: "MIT",
 * github: "https://github.com/yangyuji/hammer-swipe-delete",
 * name: "hammerSwipeDelete.js",
-* version: "1.0.1"
+* version: "1.0.2"
 */
 
 (function (root, factory) {
@@ -17,16 +17,33 @@
 }(this, function () {
     'use strict'
 
-    var _translate = function (el, attr, val) {
-        var vendors = ['', 'webkit', 'ms', 'Moz', 'O'],
-            body = document.documentElement;
+    var _util = {
+        translate: function (el, attr, val) {
+            var vendors = ['', 'webkit', 'ms', 'Moz', 'O'],
+                body = document.documentElement;
 
-        [].forEach.call(vendors, function (vendor) {
-            var styleAttr = vendor ? vendor + attr.charAt(0).toUpperCase() + attr.substr(1) : attr;
-            if (typeof body.style[styleAttr] === 'string') {
-                el.style[styleAttr] = val;
+            [].forEach.call(vendors, function (vendor) {
+                var styleAttr = vendor ? vendor + attr.charAt(0).toUpperCase() + attr.substr(1) : attr;
+                if (typeof body.style[styleAttr] === 'string') {
+                    el.style[styleAttr] = val;
+                }
+            });
+        },
+        getParent: function (target, cls) {
+            var el = null;
+            // 获取标记的元素
+            if (target.classList.contains(cls)) {
+                el = target;
             }
-        });
+            while(target && el == null) {
+                if (target.classList.contains(cls)) {
+                    el = target;
+                } else {
+                    target = target.parentNode;
+                }
+            }
+            return el
+        }
     };
 
     var hammerSwipeDelete = {
@@ -56,19 +73,7 @@
                 hammer.on('swipe swipeleft swiperight', function(ev) {
 
                     var target = ev.target;
-
-                    var el = null;
-                    // 获取标记的元素
-                    if (target.classList.contains(classTag)) {
-                        el = target;
-                    }
-                    while(target && el == null) {
-                        if (target.classList.contains(classTag)) {
-                            el = target;
-                        } else {
-                            target = target.parentNode;
-                        }
-                    }
+                    var el = _util.getParent(target, classTag);
                     if (!el) {
                         return;
                     }
@@ -76,8 +81,8 @@
                     // 向右滑动一屏
                     if (ev.type == 'swiperight') {
                         if (el.classList.contains('move-out-click')) {
-                            _translate(el, 'transitionDuration', '200ms');
-                            _translate(el, 'transform', 'translate3d(0, 0, 0)');
+                            _util.translate(el, 'transitionDuration', '200ms');
+                            _util.translate(el, 'transform', 'translate3d(0, 0, 0)');
                             el.classList.remove('move-out-click');
                         }
                     }
@@ -86,8 +91,8 @@
                     if (ev.type == 'swipeleft') {
                         console.log('swipeleft', el);
                         if (!el.classList.contains('move-out-click')) {
-                            _translate(el, 'transitionDuration', '200ms');
-                            _translate(el, 'transform', 'translate3d(' + -moveCount + 'px, 0, 0)');
+                            _util.translate(el, 'transitionDuration', '200ms');
+                            _util.translate(el, 'transform', 'translate3d(' + -moveCount + 'px, 0, 0)');
                             el.classList.add('move-out-click');
                         }
                     }
@@ -97,8 +102,8 @@
                         for (var ii = 0; ii < container.length; ii++) {
                             if (container[ii].classList.contains('move-out-click') && container[ii] != el) {
                                 // 动画慢一点，避免卡帧
-                                _translate(container[ii], 'transitionDuration', '200ms');
-                                _translate(container[ii], 'transform', 'translate3d(0, 0, 0)');
+                                _util.translate(container[ii], 'transitionDuration', '200ms');
+                                _util.translate(container[ii], 'transform', 'translate3d(0, 0, 0)');
                                 container[ii].classList.remove('move-out-click');
                             }
                         }
